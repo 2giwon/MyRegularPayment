@@ -14,6 +14,7 @@ android {
     defaultConfig {
         applicationId = AndroidConfig.APP_ID
         targetSdk = AndroidConfig.TARGET_SDK
+        minSdk = AndroidConfig.MIN_SDK
         versionCode = AndroidConfig.VERSION_CODE
         versionName = AndroidConfig.VERSION
 
@@ -67,4 +68,6 @@ dependencies {
         testImplementation(ASSERTJ_CORE)
         testImplementation(MOCKK)
     }
+
+    implementation(PaymentDependency.BILLING_CLIENT)
 }

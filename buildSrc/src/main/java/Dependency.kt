@@ -35,3 +35,7 @@ object HiltDependency {
 object CoroutineDependency {
     const val CORE = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.COROUTINE}"
 }
+
+object PaymentDependency {
+    const val BILLING_CLIENT = "com.android.billingclient:billing:4.1.0"
+}

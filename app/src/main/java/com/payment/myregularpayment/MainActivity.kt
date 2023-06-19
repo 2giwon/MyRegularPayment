@@ -1,4 +1,4 @@
-package com.example.myregularpayment
+package com.payment.myregularpayment
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
