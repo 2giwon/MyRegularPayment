@@ -69,5 +69,8 @@ dependencies {
         testImplementation(MOCKK)
     }
 
-    implementation(PaymentDependency.BILLING_CLIENT)
+    PaymentDependency.run {
+        implementation(BILLING_CLIENT)
+        implementation(BILLING_CLIENT_KTX)
+    }
 }

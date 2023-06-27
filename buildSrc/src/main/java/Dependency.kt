@@ -2,6 +2,7 @@ object Version {
     const val KOTLIN = "1.7.10"
     const val HILT = "2.43.2"
     const val COROUTINE = "1.6.4"
+    const val BILLING_CLIENT = "4.1.0"
 }
 
 object TestDependency {
@@ -37,5 +38,6 @@ object CoroutineDependency {
 }
 
 object PaymentDependency {
-    const val BILLING_CLIENT = "com.android.billingclient:billing:4.1.0"
+    const val BILLING_CLIENT = "com.android.billingclient:billing:${Version.BILLING_CLIENT}"
+    const val BILLING_CLIENT_KTX = "com.android.billingclient:billing-ktx:${Version.BILLING_CLIENT}"
 }
