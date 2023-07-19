@@ -41,3 +41,7 @@ object PaymentDependency {
     const val BILLING_CLIENT = "com.android.billingclient:billing:${Version.BILLING_CLIENT}"
     const val BILLING_CLIENT_KTX = "com.android.billingclient:billing-ktx:${Version.BILLING_CLIENT}"
 }
+
+object EtcDependency {
+    const val TIMBER = "com.jakewharton.timber:timber:5.0.1"
+}

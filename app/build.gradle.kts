@@ -73,4 +73,6 @@ dependencies {
         implementation(BILLING_CLIENT)
         implementation(BILLING_CLIENT_KTX)
     }
+
+    implementation(EtcDependency.TIMBER)
 }
