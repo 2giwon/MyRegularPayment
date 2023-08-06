@@ -27,9 +27,9 @@ class MainActivity : BaseActivity() {
         setBindings()
 
         billingManager = BillingManager(
-            activity = this,
+            activity = this@MainActivity,
             onBillingConnected = {
-                billingManager.getSkuDetails("sub001", billingType = BillingClient.SkuType.SUBS) {
+                billingManager.getSkuDetails("s001", "sub001", "sub002", billingType = BillingClient.SkuType.SUBS) {
                     viewModel.addSkuDetails(it)
                 }
 
@@ -37,11 +37,7 @@ class MainActivity : BaseActivity() {
                     viewModel.addSkuDetails(it)
                 }
 
-                billingManager.checkSubscribed("sub001") { purchase ->
-                    viewModel.updateSubscriptionState(purchase ?: return@checkSubscribed)
-                }
-
-                billingManager.checkSubscribed("a0001") { purchase ->
+                billingManager.checkSubscribed { purchase ->
                     viewModel.updateSubscriptionState(purchase ?: return@checkSubscribed)
                 }
             },
@@ -56,6 +52,8 @@ class MainActivity : BaseActivity() {
                 ).show()
             }
         )
+
+        billingManager.startConnection()
     }
 
     private fun setAdapter() = with(binding.rvBill) {

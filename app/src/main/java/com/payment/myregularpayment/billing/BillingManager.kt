@@ -1,33 +1,26 @@
 package com.payment.myregularpayment.billing
 
-import android.app.Activity
-import android.content.Context
-import com.android.billingclient.api.AcknowledgePurchaseParams
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingClientStateListener
-import com.android.billingclient.api.BillingFlowParams
-import com.android.billingclient.api.BillingResult
-import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.PurchasesUpdatedListener
-import com.android.billingclient.api.SkuDetails
-import com.android.billingclient.api.SkuDetailsParams
+import androidx.activity.ComponentActivity
+import androidx.lifecycle.lifecycleScope
+import com.android.billingclient.api.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class BillingManager(
     val onBillingConnected: () -> Unit,
     val onSuccess: (Purchase) -> Unit,
     val onFailure: (Int) -> Unit,
-    private val activity: Activity
+    private val activity: ComponentActivity
 ) {
 
     private val purchasesUpdatedListener = PurchasesUpdatedListener { billingResult, purchases ->
         val responseCode = billingResult.responseCode
         if (responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             for (purchase in purchases) {
-
+                confirmPurchase(purchase)
             }
         } else {
             onFailure(billingResult.responseCode)
@@ -39,7 +32,7 @@ class BillingManager(
         .enablePendingPurchases()
         .build()
 
-    init {
+    fun startConnection() {
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingServiceDisconnected() {
                 Timber.d(
@@ -67,9 +60,10 @@ class BillingManager(
             .setSkusList(sku.asList())
             .setType(billingType)
 
-        billingClient.querySkuDetailsAsync(params.build()) { _, list ->
-            CoroutineScope(Dispatchers.Main).launch {
-                result(list ?: emptyList())
+        activity.lifecycleScope.launch(Dispatchers.IO) {
+            val skuDetailsResult = billingClient.querySkuDetails(params.build())
+            withContext(Dispatchers.Main) {
+                result(skuDetailsResult.skuDetailsList ?: emptyList())
             }
         }
     }
@@ -85,8 +79,8 @@ class BillingManager(
         }
     }
 
-    fun checkSubscribed(sku: String, result: (Purchase?) -> Unit) {
-        billingClient.queryPurchasesAsync(sku) { _, purchases ->
+    fun checkSubscribed(result: (Purchase?) -> Unit) {
+        billingClient.queryPurchasesAsync(BillingClient.SkuType.SUBS) { _, purchases ->
             CoroutineScope(Dispatchers.Main).launch {
                 for (purchase in purchases) {
                     if (purchase.isAcknowledged && purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
@@ -115,5 +109,9 @@ class BillingManager(
                 }
             }
         }
+    }
+
+    fun disconnectedBillingClient() {
+        billingClient.endConnection()
     }
 }
