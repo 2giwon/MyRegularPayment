@@ -6,4 +6,8 @@
     <string name="using_regular_payment">정기권 사용중</string>
     <string name="subscription_title">구독</string>
     <string name="date_format">%1$tY/%1$tm/%1$td %1$tH:%1$tM</string>
+
+    <string name="inapp_product_a0001">이용권 1,000원</string>
+    <string name="subscribe_product_sub002">한달 정기 결제 3,500원</string>
+    <string name="using">사용중</string>
 </resources>
