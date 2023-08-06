@@ -14,6 +14,7 @@ android {
     defaultConfig {
         applicationId = AndroidConfig.APP_ID
         targetSdk = AndroidConfig.TARGET_SDK
+        minSdk = AndroidConfig.MIN_SDK
         versionCode = AndroidConfig.VERSION_CODE
         versionName = AndroidConfig.VERSION
 
@@ -56,6 +57,7 @@ dependencies {
         implementation(FRAGMENT_KTX)
         implementation(LIFECYCLE_LIVEDATA_KTX)
         implementation(RECYCLERVIEW)
+        implementation(SWIPE_REFRESH_LAYOUT)
     }
 
     implementation(BasicDependency.MATERIAL)
@@ -67,4 +69,11 @@ dependencies {
         testImplementation(ASSERTJ_CORE)
         testImplementation(MOCKK)
     }
+
+    PaymentDependency.run {
+        implementation(BILLING_CLIENT)
+        implementation(BILLING_CLIENT_KTX)
+    }
+
+    implementation(EtcDependency.TIMBER)
 }

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">MyRegularPayment</string>
+    <string name="regular_payment">정기 결제</string>
+    <string name="ticket_payment">이용권 결제</string>
+    <string name="purchase_title">구매</string>
+    <string name="using_regular_payment">정기권 사용중</string>
+    <string name="subscription_title">구독</string>
+    <string name="date_format">%1$tY/%1$tm/%1$td %1$tH:%1$tM</string>
 </resources>

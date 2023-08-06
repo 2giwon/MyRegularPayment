@@ -2,6 +2,7 @@ object Version {
     const val KOTLIN = "1.7.10"
     const val HILT = "2.43.2"
     const val COROUTINE = "1.6.4"
+    const val BILLING_CLIENT = "4.1.0"
 }
 
 object TestDependency {
@@ -21,6 +22,7 @@ object AndroidXDependency {
     const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:1.5.2"
     const val LIFECYCLE_LIVEDATA_KTX = "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
     const val RECYCLERVIEW = "androidx.recyclerview:recyclerview:1.2.0"
+    const val SWIPE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 }
 
 object BasicDependency {
@@ -34,4 +36,13 @@ object HiltDependency {
 
 object CoroutineDependency {
     const val CORE = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.COROUTINE}"
+}
+
+object PaymentDependency {
+    const val BILLING_CLIENT = "com.android.billingclient:billing:${Version.BILLING_CLIENT}"
+    const val BILLING_CLIENT_KTX = "com.android.billingclient:billing-ktx:${Version.BILLING_CLIENT}"
+}
+
+object EtcDependency {
+    const val TIMBER = "com.jakewharton.timber:timber:5.0.1"
 }
