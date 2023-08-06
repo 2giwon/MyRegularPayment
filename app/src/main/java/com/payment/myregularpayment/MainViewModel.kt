@@ -34,4 +34,8 @@ class MainViewModel : ViewModel() {
     fun updateSubscriptionState(purchase: Purchase) {
         _currentSubscription.value = purchase
     }
+
+    fun clearSkuDetails() {
+        _skuDetails.value = listOf()
+    }
 }

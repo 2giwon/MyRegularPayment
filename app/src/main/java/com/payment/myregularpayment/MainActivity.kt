@@ -40,6 +40,12 @@ class MainActivity : BaseActivity() {
                 billingManager.checkSubscribed { purchase ->
                     viewModel.updateSubscriptionState(purchase ?: return@checkSubscribed)
                 }
+
+                billingManager.checkInappPurchase { purchase ->
+                    viewModel.updateSubscriptionState(purchase ?: return@checkInappPurchase)
+                }
+
+                binding.srlMain.isRefreshing = false
             },
             onSuccess = { purchase ->
                 viewModel.updateSubscriptionState(purchase)
@@ -50,6 +56,7 @@ class MainActivity : BaseActivity() {
                     "구매 도중 오류가 발생하였습니다. (${responseCode})",
                     Toast.LENGTH_SHORT
                 ).show()
+                binding.srlMain.isRefreshing = false
             }
         )
 
@@ -79,6 +86,11 @@ class MainActivity : BaseActivity() {
             binding.cardviewCurrent.isVisible = true
             binding.current = it
             binding.executePendingBindings()
+        }
+
+        binding.srlMain.setOnRefreshListener {
+            viewModel.clearSkuDetails()
+            billingManager.startConnection()
         }
     }
 }

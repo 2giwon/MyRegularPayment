@@ -92,6 +92,19 @@ class BillingManager(
         }
     }
 
+    fun checkInappPurchase(result: (Purchase?) -> Unit) {
+        billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP) { _, purchases ->
+            CoroutineScope(Dispatchers.Main).launch {
+                for (purchase in purchases) {
+                    if (purchase.isAcknowledged && purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                        return@launch result(purchase)
+                    }
+                }
+                return@launch result(null)
+            }
+        }
+    }
+
     fun confirmPurchase(purchase: Purchase) {
         if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged) {
             val ackPurchaseParams = AcknowledgePurchaseParams.newBuilder()

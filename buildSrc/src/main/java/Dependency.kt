@@ -22,6 +22,7 @@ object AndroidXDependency {
     const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:1.5.2"
     const val LIFECYCLE_LIVEDATA_KTX = "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
     const val RECYCLERVIEW = "androidx.recyclerview:recyclerview:1.2.0"
+    const val SWIPE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 }
 
 object BasicDependency {

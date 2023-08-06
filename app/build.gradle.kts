@@ -57,6 +57,7 @@ dependencies {
         implementation(FRAGMENT_KTX)
         implementation(LIFECYCLE_LIVEDATA_KTX)
         implementation(RECYCLERVIEW)
+        implementation(SWIPE_REFRESH_LAYOUT)
     }
 
     implementation(BasicDependency.MATERIAL)
