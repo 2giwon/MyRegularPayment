@@ -2,6 +2,7 @@ package com.payment.myregularpayment
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,6 +10,10 @@ import com.android.billingclient.api.BillingClient
 import com.payment.myregularpayment.base.BaseActivity
 import com.payment.myregularpayment.billing.BillingManager
 import com.payment.myregularpayment.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity() {
 
@@ -19,12 +24,36 @@ class MainActivity : BaseActivity() {
     )
 
     private lateinit var billingManager: BillingManager
+    
+    private var doubleBackButtonPressed = false
+
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (doubleBackButtonPressed) {
+                finishAffinity()
+                return
+            }
+            
+            doubleBackButtonPressed = true
+            Toast.makeText(
+                this@MainActivity,
+                getString(R.string.back_press_exit),
+                Toast.LENGTH_SHORT
+            ).show()
+            CoroutineScope(Dispatchers.Main).launch {
+                delay(2000L).run {
+                    doubleBackButtonPressed = false
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.lifecycleOwner = this
         setAdapter()
         setBindings()
+        this.onBackPressedDispatcher.addCallback(this, backPressedCallback)
 
         billingManager = BillingManager(
             activity = this@MainActivity,
