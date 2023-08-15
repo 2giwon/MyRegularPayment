@@ -44,15 +44,29 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
+                        android:layout_marginEnd="8dp"
                         android:layout_marginTop="16dp"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="@{current.packageName}"
+                        bind_setText_sku="@{current.skus}"
                         android:textColor="@color/black"
                         android:textSize="16dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/tv_use"
                         tools:text="@string/using_regular_payment" />
+
+                    <TextView
+                        android:id="@+id/tv_use"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/using"
+                        android:textColor="#ff0000"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toTopOf="@id/tv_title"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
                     <TextView
                         android:id="@+id/tv_period"
@@ -74,6 +88,7 @@
                         android:layout_margin="16dp"
                         android:text="@{current.originalJson}"
                         android:textColor="@color/light_grey"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_period"
