@@ -76,4 +76,10 @@ dependencies {
     }
 
     implementation(EtcDependency.TIMBER)
+
+    NetworkDependency.run {
+        implementation(RETROFIT)
+        implementation(CONVERTER_GSON)
+        implementation(CONVERTER_SCALARS)
+    }
 }

@@ -2,7 +2,7 @@ object Version {
     const val KOTLIN = "1.7.10"
     const val HILT = "2.43.2"
     const val COROUTINE = "1.6.4"
-    const val BILLING_CLIENT = "4.1.0"
+    const val BILLING_CLIENT = "6.0.1"
 }
 
 object TestDependency {
@@ -36,6 +36,14 @@ object HiltDependency {
 
 object CoroutineDependency {
     const val CORE = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.COROUTINE}"
+}
+
+object NetworkDependency {
+    private const val VERSION = "2.9.0"
+
+    const val RETROFIT = "com.squareup.retrofit2:retrofit:$VERSION"
+    const val CONVERTER_GSON = "com.squareup.retrofit2:converter-gson:$VERSION"
+    const val CONVERTER_SCALARS = "com.squareup.retrofit2:converter-scalars:$VERSION"
 }
 
 object PaymentDependency {

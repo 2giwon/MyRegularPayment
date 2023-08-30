@@ -3,30 +3,34 @@ package com.payment.myregularpayment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.SkuDetails
 
 class MainViewModel : ViewModel() {
 
-    private val _skuDetails = MutableLiveData<List<SkuDetails>>()
-    val skuDetails: LiveData<List<SkuDetails>> get() = _skuDetails
+    private val _skuDetails = MutableLiveData<List<ProductDetails>>()
+    val skuDetails: LiveData<List<ProductDetails>> get() = _skuDetails
 
     private val _currentSubscription = MutableLiveData<Purchase>()
     val currentSubscription: LiveData<Purchase> get() = _currentSubscription
 
-    private val _wantBuyProduct = MutableLiveData<SkuDetails>()
-    val wantBuyProduct: LiveData<SkuDetails> get() = _wantBuyProduct
+    private val _wantBuyProduct = MutableLiveData<ProductDetails>()
+    val wantBuyProduct: LiveData<ProductDetails> get() = _wantBuyProduct
 
-    fun addSkuDetails(list: List<SkuDetails>) {
-        val newList = _skuDetails.value?.toMutableList() ?: mutableListOf()
-        newList.addAll(list)
+    fun addInappProducts(list: List<ProductDetails>) {
+        val oldList = _skuDetails.value?.toMutableList() ?: mutableListOf()
+        list.
+        oldList
+            .addAll(list)
+            .distinctBy { it.productId }
+
 
         _skuDetails.value = newList
     }
 
-    fun purchaseProduct(product: SkuDetails) {
+    fun purchaseProduct(product: ProductDetails) {
         val skuDetails = _skuDetails.value?.toList() ?: return
-        skuDetails.find { it.sku == product.sku }?.let { sku ->
+        skuDetails.find { it.productId == product.productId }?.let { sku ->
             _wantBuyProduct.value = sku
         }
     }

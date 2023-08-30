@@ -6,12 +6,12 @@ import com.android.billingclient.api.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class BillingManager(
     val onBillingConnected: () -> Unit,
     val onSuccess: (Purchase) -> Unit,
+    val onConnectedFailure: (String) -> Unit,
     val onFailure: (Int) -> Unit,
     private val activity: ComponentActivity
 ) {
@@ -39,39 +39,54 @@ class BillingManager(
                     "BiilingManager",
                     "== BillingClient onBillingServiceDisconnected() called =="
                 )
+                startConnection()
             }
 
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     onBillingConnected()
                 } else {
-                    onFailure(billingResult.responseCode)
+                    onConnectedFailure(billingResult.debugMessage)
                 }
             }
         })
     }
 
-    fun getSkuDetails(
+    fun getInAppProducts(
         vararg sku: String,
-        billingType: String,
-        result: (List<SkuDetails>) -> Unit = {}
+        result: (List<ProductDetails>) -> Unit = {}
     ) {
-        val params = SkuDetailsParams.newBuilder()
-            .setSkusList(sku.asList())
-            .setType(billingType)
+        val productList = sku.asList().map {
+            QueryProductDetailsParams.Product.newBuilder()
+                .setProductId(it)
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
+        }
+
+        val params = QueryProductDetailsParams.newBuilder().setProductList(productList)
 
         activity.lifecycleScope.launch(Dispatchers.IO) {
-            val skuDetailsResult = billingClient.querySkuDetails(params.build())
-            withContext(Dispatchers.Main) {
-                result(skuDetailsResult.skuDetailsList ?: emptyList())
-            }
+            val productDetailsResult: ProductDetailsResult =
+                billingClient.queryProductDetails(params.build())
+
+            result(productDetailsResult.productDetailsList ?: emptyList())
         }
     }
 
-    fun purchaseSku(skuDetails: SkuDetails) {
-        val flowParams = BillingFlowParams.newBuilder().apply {
-            setSkuDetails(skuDetails)
-        }.build()
+    fun purchaseProduct(productDetails: ProductDetails) {
+        val offerToken: String =
+            productDetails.subscriptionOfferDetails?.get(0)?.offerToken ?: return
+
+        val productDetailParamList = listOf(
+            BillingFlowParams.ProductDetailsParams.newBuilder()
+                .setProductDetails(productDetails)
+                .setOfferToken(offerToken)
+                .build()
+        )
+
+        val flowParams = BillingFlowParams.newBuilder()
+            .setProductDetailsParamsList(productDetailParamList)
+            .build()
 
         val responseCode = billingClient.launchBillingFlow(activity, flowParams).responseCode
         if (responseCode != BillingClient.BillingResponseCode.OK) {
@@ -80,9 +95,11 @@ class BillingManager(
     }
 
     fun checkSubscribed(result: (Purchase?) -> Unit) {
-        billingClient.queryPurchasesAsync(BillingClient.SkuType.SUBS) { _, purchases ->
+        billingClient.queryPurchasesAsync(
+            QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.SUBS).build()
+        ) { _, purchaseList ->
             CoroutineScope(Dispatchers.Main).launch {
-                for (purchase in purchases) {
+                for (purchase in purchaseList) {
                     if (purchase.isAcknowledged && purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
                         return@launch result(purchase)
                     }
@@ -93,7 +110,12 @@ class BillingManager(
     }
 
     fun checkInappPurchase(result: (Purchase?) -> Unit) {
-        billingClient.queryPurchasesAsync(BillingClient.SkuType.INAPP) { _, purchases ->
+        billingClient.queryPurchasesAsync(
+            QueryPurchasesParams
+                .newBuilder()
+                .setProductType(BillingClient.ProductType.INAPP)
+                .build()
+        ) { _, purchases ->
             CoroutineScope(Dispatchers.Main).launch {
                 for (purchase in purchases) {
                     if (purchase.isAcknowledged && purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {

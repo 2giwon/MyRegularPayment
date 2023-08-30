@@ -10,7 +10,7 @@
 
         <variable
             name="product"
-            type="com.android.billingclient.api.SkuDetails" />
+            type="com.android.billingclient.api.ProductDetails" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
